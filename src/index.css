@@ -1,8 +1,16 @@
 @import url("https://fonts.googleapis.com/css2?family=Nunito:wght@700&family=Roboto:wght@700&display=swap");
 
-body {
+* {
   margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
   font-family: "Nunito", sans-serif;
+  min-height: 100vh;
+  overflow: hidden;
+  background: url("./images/weather-bg2.jpg") center/cover no-repeat;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
