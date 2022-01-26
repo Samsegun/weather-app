@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Nunito:wght@700&family=Roboto:wght@700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Quicksand:wght@500&display=swap");
 
 * {
   margin: 0;
@@ -8,15 +8,12 @@
 
 body {
   position: relative;
-  font-family: "Nunito", sans-serif;
+  font-family: "Quicksand", sans-serif;
+
   min-height: 100vh;
   overflow: hidden;
-  background: linear-gradient(
-      to right,
-      rgba(39, 39, 39, 0.5),
-      rgba(133, 133, 133, 0.5)
-    ),
-    url("./images/weather-bg2.jpg") center/cover no-repeat;
+  background: linear-gradient(to right, rgba(3, 2, 0, 0.5), rgba(17, 8, 1, 0.5)),
+    url("./images/weather-bg1.jpg") center/cover no-repeat;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: white;
