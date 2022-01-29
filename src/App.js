@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
-import { API_KEY } from "./API";
+import { API_OPENWEATHER, API_WEATHERBIT } from "./API";
 import styles from "./App.module.css";
+import search from "./images/search.png";
 
 const App = () => {
   const [success, setSuccess] = useState(true);
@@ -9,21 +10,36 @@ const App = () => {
   const [cloudsDesc, setCloudsDesc] = useState();
   const [imageSrc, setImageSrc] = useState();
   const [country, setCountry] = useState();
+  const [timeZone, setTimeZone] = useState();
 
   useEffect(() => {
     Promise.all([
-      // fetch(
-      //   `https://api.openweathermap.org/data/2.5/onecall?lat=${5.556}&lon=${-0.1969}&exclude={part}&appid=${API_KEY}`
-      // ).then(response => response.json()),
       fetch(
-        `https://api.openweathermap.org/data/2.5/find?q=dubai&units=metric&appid=${API_KEY}`
-      ).then(response => response.json()),
+        // `https://api.openweathermap.org/data/2.5/find?q=lagos&units=metric&appid=${API_OPENWEATHER}`
+        `https://api.weatherbit.io/v2.0/current?city=london,us&key=${API_WEATHERBIT}`
+        // `http://api.positionstack.com/v1/forward?access_key=0e15af8bcb5a9236a13476b57e69729d&query=new,york&limit=1`
+      )
+        .then(response => response.json())
+        .then(data => {
+          console.log(data);
+          // destructure cordinates from data
+          const { latitude, longitude } = data.data[0];
+          console.log(latitude, longitude);
+
+          // send fetch request using cordinates
+          return fetch(
+            // `https://api.weatherbit.io/v2.0/current?lat=${latitude}&lon=${longitude}&key=${API_WEATHERBIT}`
+            `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&exclude={part}&appid=${API_OPENWEATHER}`
+          );
+        })
+        .then(response => response.json()),
       fetch("http://ip-api.com/json").then(response => response.json()),
     ])
       .then(value => {
-        console.log(value);
         // destructure weather&location data from value and return both as an object
         const [weather, location] = value;
+
+        console.log(value);
 
         return { weather, location };
       })
@@ -31,29 +47,32 @@ const App = () => {
         // destructure weather&location data from data object
         const { location, weather } = data;
 
+        console.log(weather, location);
+
         // extract user location
-        const timeZone = location.timezone;
+        const userTimeZone = location.timezone;
 
         // extract weather info
-        const cityName = weather.list[0].name;
-        const temp = Math.round(weather.list[0].main.temp);
-        const humidity = weather.list[0].main.humidity;
-        const cloudsPercent = weather.list[0].clouds.all;
-        const cloudsDesc = weather.list[0].weather[0].description;
-        const image = weather.list[0].weather[0].icon;
-        const imageUrl = `http://openweathermap.org/img/wn/${image}@2x.png`;
-        const country = weather.list[0].sys.country;
+        const cityName = weather.data[0].city_name;
+        const temp = Math.round(weather.data[0].temp);
+        const humidity = Math.round(weather.data[0].rh);
+        const cloudsPercent = weather.data[0].clouds;
+        const cloudsDesc = weather.data[0].weather.description;
+        const image = weather.data[0].weather.icon;
+        const imageUrl = `https://www.weatherbit.io/static/img/icons/${image}.png`;
+        const country = weather.data[0].country_code;
+        const timeZone = weather.data[0].timezone;
 
         // display on the console
         console.log(
-          timeZone,
           cityName,
           temp,
           humidity,
           cloudsPercent,
           cloudsDesc,
-          imageUrl,
-          country
+          image,
+          country,
+          timeZone
         );
 
         setCityName(cityName);
@@ -61,6 +80,7 @@ const App = () => {
         setCloudsDesc(cloudsDesc);
         setImageSrc(imageUrl);
         setCountry(country);
+        setTimeZone(timeZone);
       })
       .catch(err => {
         console.log(err);
@@ -87,7 +107,7 @@ const App = () => {
             placeholder="Enter Country..."
             onChange={changeHandler}
           />
-          {/* <img src="./images/search.png" alt="search icon" /> */}
+          <img src={search} alt="search icon" />
         </form>
       </header>
       <div className={styles["weather-info"]}>
@@ -102,7 +122,12 @@ const App = () => {
                 <sup> {country}</sup>
               </span>
               <span className={styles["city_date-time"]}>
-                06:09-Monday, 9 Sep '19
+                {/* {new Date().toLocaleString("en-us", {
+                  timeZone: { timeZone },
+                  timeStyle: "medium",
+                  hourCycle: "h24",
+                })} */}
+                On next Push
               </span>
             </p>
             <p className={styles["weather-icon"]}>
@@ -111,6 +136,11 @@ const App = () => {
             </p>
           </>
         )}
+      </div>
+
+      {/* written on 26th Jan, 2022 */}
+      <div className={styles.version}>
+        <p>&copy; {new Date().getUTCFullYear()} V 0.1.0</p>
       </div>
     </>
   );

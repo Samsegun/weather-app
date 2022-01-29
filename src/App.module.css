@@ -4,12 +4,25 @@
   justify-content: space-between;
 }
 
+.header form {
+  position: relative;
+}
+
 .header input {
   outline: none;
   border: none;
   border-radius: 10px;
   font-size: 1rem;
   padding: 0.5rem;
+}
+
+.header img {
+  width: 30px;
+  position: absolute;
+  right: 2px;
+  top: 3px;
+  background: rgb(252, 252, 252);
+  cursor: pointer;
 }
 
 .weather-info {
@@ -56,4 +69,12 @@ span {
 
 .weather-icon span {
   font-weight: bold;
+}
+
+.version {
+  position: absolute;
+  right: 3%;
+  bottom: 10%;
+  border-bottom: 1px solid;
+  font-size: 0.85rem;
 }

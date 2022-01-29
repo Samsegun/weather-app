@@ -1,4 +1,5 @@
 // const API_KEY = process.env.REACT_APP_API_KEY;
-const API_KEY = process.env.REACT_APP_API_KEY;
+const API_OPENWEATHER = process.env.REACT_APP_API_OPENWEATHER;
+const API_WEATHERBIT = process.env.REACT_APP_API_WEATHERBIT;
 
-export { API_KEY };
+export { API_OPENWEATHER, API_WEATHERBIT };
