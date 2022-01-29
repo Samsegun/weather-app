@@ -10,36 +10,25 @@ const App = () => {
   const [cloudsDesc, setCloudsDesc] = useState();
   const [imageSrc, setImageSrc] = useState();
   const [country, setCountry] = useState();
-  const [timeZone, setTimeZone] = useState();
+  const [timeZone, setTimeZone] = useState(
+    new Date().toLocaleString("en-us", {
+      timeZone: "Africa/Lagos",
+      timeStyle: "medium",
+      hourCycle: "h24",
+    })
+  );
+  const [timeIsPresent, setTimeIsPresent] = useState(false);
 
   useEffect(() => {
     Promise.all([
       fetch(
-        // `https://api.openweathermap.org/data/2.5/find?q=lagos&units=metric&appid=${API_OPENWEATHER}`
-        `https://api.weatherbit.io/v2.0/current?city=london,us&key=${API_WEATHERBIT}`
-        // `http://api.positionstack.com/v1/forward?access_key=0e15af8bcb5a9236a13476b57e69729d&query=new,york&limit=1`
-      )
-        .then(response => response.json())
-        .then(data => {
-          console.log(data);
-          // destructure cordinates from data
-          const { latitude, longitude } = data.data[0];
-          console.log(latitude, longitude);
-
-          // send fetch request using cordinates
-          return fetch(
-            // `https://api.weatherbit.io/v2.0/current?lat=${latitude}&lon=${longitude}&key=${API_WEATHERBIT}`
-            `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&exclude={part}&appid=${API_OPENWEATHER}`
-          );
-        })
-        .then(response => response.json()),
+        `https://api.weatherbit.io/v2.0/current?city=toronto,ca&key=${API_WEATHERBIT}`
+      ).then(response => response.json()),
       fetch("http://ip-api.com/json").then(response => response.json()),
     ])
       .then(value => {
         // destructure weather&location data from value and return both as an object
         const [weather, location] = value;
-
-        console.log(value);
 
         return { weather, location };
       })
@@ -47,10 +36,10 @@ const App = () => {
         // destructure weather&location data from data object
         const { location, weather } = data;
 
-        console.log(weather, location);
-
         // extract user location
         const userTimeZone = location.timezone;
+
+        console.log(weather);
 
         // extract weather info
         const cityName = weather.data[0].city_name;
@@ -80,13 +69,20 @@ const App = () => {
         setCloudsDesc(cloudsDesc);
         setImageSrc(imageUrl);
         setCountry(country);
-        setTimeZone(timeZone);
+        setTimeZone(
+          new Date().toLocaleString("en-us", {
+            timeZone: timeZone,
+            timeStyle: "medium",
+            hourCycle: "h24",
+          })
+        );
+        setTimeIsPresent(true);
       })
       .catch(err => {
         console.log(err);
         setSuccess(false);
       });
-  }, [cityName]);
+  }, []);
 
   const changeHandler = event => {
     console.log(event);
@@ -121,14 +117,7 @@ const App = () => {
                 {cityName}
                 <sup> {country}</sup>
               </span>
-              <span className={styles["city_date-time"]}>
-                {/* {new Date().toLocaleString("en-us", {
-                  timeZone: { timeZone },
-                  timeStyle: "medium",
-                  hourCycle: "h24",
-                })} */}
-                On next Push
-              </span>
+              <span className={styles["city_date-time"]}>{timeZone}</span>
             </p>
             <p className={styles["weather-icon"]}>
               <img src={imageSrc} alt="weather icon" />
