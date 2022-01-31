@@ -1,4 +1,5 @@
 .header {
+  position: relative;
   margin: 3rem;
   display: flex;
   justify-content: space-between;
@@ -23,6 +24,36 @@
   top: 3px;
   background: rgb(252, 252, 252);
   cursor: pointer;
+}
+
+.search-results {
+  position: absolute;
+  display: none;
+  right: 6px;
+  top: 2.3rem;
+  list-style-type: none;
+  background: white;
+  width: 12.5rem;
+  height: 10rem;
+  overflow: hidden;
+  color: rgb(41, 40, 40);
+}
+
+.search-results li {
+  padding: 0.5rem;
+}
+
+.search-results li:not(:last-of-type) {
+  border-bottom: 1px solid;
+}
+
+.search-results li a {
+  display: block;
+  text-decoration: none;
+}
+
+.search-results li a:hover {
+  background: darkgray;
 }
 
 .weather-info {

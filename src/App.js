@@ -6,11 +6,11 @@ import search from "./images/search.png";
 const App = () => {
   const [success, setSuccess] = useState(true);
   const [temp, setTemp] = useState();
-  const [cityName, setCityName] = useState();
+  const [cityName, setCityName] = useState("");
   const [cloudsDesc, setCloudsDesc] = useState();
   const [imageSrc, setImageSrc] = useState();
   const [country, setCountry] = useState();
-  const [timeZone, setTimeZone] = useState(
+  const [currentTime, setCurrentTime] = useState(
     new Date().toLocaleString("en-us", {
       timeZone: "Africa/Lagos",
       timeStyle: "medium",
@@ -18,11 +18,12 @@ const App = () => {
     })
   );
   const [timeIsPresent, setTimeIsPresent] = useState(false);
+  const [searchItem, setSearchItem] = useState("");
 
   useEffect(() => {
     Promise.all([
       fetch(
-        `https://api.weatherbit.io/v2.0/current?city=toronto,ca&key=${API_WEATHERBIT}`
+        `https://api.weatherbit.io/v2.0/current?city=${cityName}=c&key=${API_WEATHERBIT}`
       ).then(response => response.json()),
       fetch("http://ip-api.com/json").then(response => response.json()),
     ])
@@ -69,7 +70,7 @@ const App = () => {
         setCloudsDesc(cloudsDesc);
         setImageSrc(imageUrl);
         setCountry(country);
-        setTimeZone(
+        setCurrentTime(
           new Date().toLocaleString("en-us", {
             timeZone: timeZone,
             timeStyle: "medium",
@@ -82,14 +83,27 @@ const App = () => {
         console.log(err);
         setSuccess(false);
       });
-  }, []);
+  }, [cityName]);
 
   const changeHandler = event => {
-    console.log(event);
+    const userInput = event.target.value.toLowerCase();
+
+    console.log(userInput);
+
+    setSearchItem(userInput);
   };
 
-  const submitHandler = () => {
-    console.log("hi");
+  const submitHandler = event => {
+    event.preventDefault();
+
+    fetch(
+      `https://api.weatherbit.io/v2.0/current?city=${searchItem}&key=${API_WEATHERBIT}`
+    )
+      .then(response => response.json())
+      .then(data => {
+        const enteredCity = data.data[0].city_name;
+        setCityName(enteredCity);
+      });
   };
 
   return (
@@ -105,6 +119,18 @@ const App = () => {
           />
           <img src={search} alt="search icon" />
         </form>
+
+        <ul className={styles["search-results"]}>
+          <li>
+            <a href="/">hi</a>
+          </li>
+          <li>
+            <a href="/">hi</a>
+          </li>
+          <li>
+            <a href="/">hi</a>
+          </li>
+        </ul>
       </header>
       <div className={styles["weather-info"]}>
         {!success && <h1>Can't load data</h1>}
@@ -117,7 +143,7 @@ const App = () => {
                 {cityName}
                 <sup> {country}</sup>
               </span>
-              <span className={styles["city_date-time"]}>{timeZone}</span>
+              <span className={styles["city_date-time"]}>{currentTime}</span>
             </p>
             <p className={styles["weather-icon"]}>
               <img src={imageSrc} alt="weather icon" />
