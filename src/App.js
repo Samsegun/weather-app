@@ -1,110 +1,69 @@
-import { useState, useEffect } from "react";
-import { API_OPENWEATHER, API_WEATHERBIT } from "./API";
+import { useState, useEffect, useRef } from "react";
+import { API_OPENWEATHER } from "./API";
 import styles from "./App.module.css";
 import search from "./images/search.png";
 
 const App = () => {
-  const [success, setSuccess] = useState(true);
-  const [temp, setTemp] = useState();
-  const [cityName, setCityName] = useState("");
-  const [cloudsDesc, setCloudsDesc] = useState();
-  const [imageSrc, setImageSrc] = useState();
-  const [country, setCountry] = useState();
-  const [currentTime, setCurrentTime] = useState(
-    new Date().toLocaleString("en-us", {
-      timeZone: "Africa/Lagos",
-      timeStyle: "medium",
-      hourCycle: "h24",
-    })
-  );
-  const [timeIsPresent, setTimeIsPresent] = useState(false);
-  const [searchItem, setSearchItem] = useState("");
+  const [weatherData, setWeatherData] = useState(null);
+  const [searchItem, setSearchItem] = useState("washington");
+  const readUserInput = useRef("");
 
   useEffect(() => {
-    Promise.all([
-      fetch(
-        `https://api.weatherbit.io/v2.0/current?city=${cityName}=c&key=${API_WEATHERBIT}`
-      ).then(response => response.json()),
-      fetch("http://ip-api.com/json").then(response => response.json()),
-    ])
-      .then(value => {
-        // destructure weather&location data from value and return both as an object
-        const [weather, location] = value;
-
-        return { weather, location };
-      })
+    fetch(
+      `https://api.openweathermap.org/data/2.5/weather?q=${searchItem}&appid=${API_OPENWEATHER}&units=metric`
+    )
+      .then(response => response.json())
       .then(data => {
-        // destructure weather&location data from data object
-        const { location, weather } = data;
+        console.log(data);
 
-        // extract user location
-        const userTimeZone = location.timezone;
-
-        console.log(weather);
-
-        // extract weather info
-        const cityName = weather.data[0].city_name;
-        const temp = Math.round(weather.data[0].temp);
-        const humidity = Math.round(weather.data[0].rh);
-        const cloudsPercent = weather.data[0].clouds;
-        const cloudsDesc = weather.data[0].weather.description;
-        const image = weather.data[0].weather.icon;
-        const imageUrl = `https://www.weatherbit.io/static/img/icons/${image}.png`;
-        const country = weather.data[0].country_code;
-        const timeZone = weather.data[0].timezone;
-
-        // display on the console
-        console.log(
-          cityName,
-          temp,
-          humidity,
-          cloudsPercent,
-          cloudsDesc,
-          image,
-          country,
-          timeZone
-        );
-
-        setCityName(cityName);
-        setTemp(temp);
-        setCloudsDesc(cloudsDesc);
-        setImageSrc(imageUrl);
-        setCountry(country);
-        setCurrentTime(
-          new Date().toLocaleString("en-us", {
-            timeZone: timeZone,
-            timeStyle: "medium",
-            hourCycle: "h24",
-          })
-        );
-        setTimeIsPresent(true);
+        return weatherDetails(data);
+      })
+      .then(dataObj => {
+        //set returned object as weatherdata state
+        setWeatherData(dataObj);
       })
       .catch(err => {
         console.log(err);
-        setSuccess(false);
       });
-  }, [cityName]);
-
-  const changeHandler = event => {
-    const userInput = event.target.value.toLowerCase();
-
-    console.log(userInput);
-
-    setSearchItem(userInput);
-  };
+  }, [searchItem]);
 
   const submitHandler = event => {
     event.preventDefault();
 
+    const userInput = readUserInput.current.value;
+
+    const newUserinput = userInput.trim().toLowerCase();
+
+    console.log(newUserinput);
+
     fetch(
-      `https://api.weatherbit.io/v2.0/current?city=${searchItem}&key=${API_WEATHERBIT}`
+      `https://api.openweathermap.org/data/2.5/weather?q=${newUserinput}&appid=${API_OPENWEATHER}&units=metric`
     )
       .then(response => response.json())
       .then(data => {
-        const enteredCity = data.data[0].city_name;
-        setCityName(enteredCity);
+        console.log(data);
+
+        return weatherDetails(data);
+      })
+      .then(dataObj => setWeatherData(dataObj))
+      .catch(err => {
+        console.log(err);
       });
   };
+
+  function weatherDetails(data) {
+    // destructure json data into different variables like temp, name etc
+    const { temp } = data.main,
+      { country } = data.sys,
+      { name } = data,
+      { icon } = data.weather[0],
+      { description } = data.weather[0];
+
+    const imgUrl = `https://openweathermap.org/img/w/${icon}.png`;
+
+    // return destructured variables as an object
+    return { temp, country, name, imgUrl, description };
+  }
 
   return (
     <>
@@ -115,7 +74,8 @@ const App = () => {
           <input
             type="text"
             placeholder="Enter Country..."
-            onChange={changeHandler}
+            ref={readUserInput}
+            // onChange={changeHandler}
           />
           <img src={search} alt="search icon" />
         </form>
@@ -132,27 +92,33 @@ const App = () => {
           </li>
         </ul>
       </header>
-      <div className={styles["weather-info"]}>
-        {!success && <h1>Can't load data</h1>}
 
-        {success && (
+      {/* main body */}
+      <div className={styles["weather-info"]}>
+        {!weatherData && <h1>Loading...</h1>}
+
+        {weatherData && (
           <>
-            <h1 className={styles.temp}>{temp}&deg;C</h1>
+            <h1 className={styles.temp}>
+              {Math.floor(weatherData.temp)}&deg;C
+            </h1>
+
             <p className={styles.city}>
               <span className={styles["city_name"]}>
-                {cityName}
-                <sup> {country}</sup>
+                {weatherData.name}
+                <sup> {weatherData.country}</sup>
               </span>
-              <span className={styles["city_date-time"]}>{currentTime}</span>
+              <span className={styles["city_date-time"]}>pending</span>
+              {/* <span className={styles["city_date-time"]}>{currentTime}</span> */}
             </p>
+
             <p className={styles["weather-icon"]}>
-              <img src={imageSrc} alt="weather icon" />
-              <span className="weather-desc">{cloudsDesc}</span>
+              <img src={weatherData.imgUrl} alt="weather icon" />
+              <span className="weather-desc">{weatherData.description}</span>
             </p>
           </>
         )}
       </div>
-
       {/* written on 26th Jan, 2022 */}
       <div className={styles.version}>
         <p>&copy; {new Date().getUTCFullYear()} V 0.1.0</p>
