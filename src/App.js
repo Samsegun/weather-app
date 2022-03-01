@@ -1,10 +1,19 @@
 import { useState, useEffect, useRef } from "react";
-import { API_OPENWEATHER } from "./API";
+import API_OPENWEATHER from "./API";
 import styles from "./App.module.css";
 import search from "./images/search.png";
+// import moment from "moment";
+// import "moment-timezone";
 
 const App = () => {
   const [weatherData, setWeatherData] = useState(null);
+  const [currentTime, setCurrentTime] = useState(
+    new Date().toLocaleString("en-US", {
+      hour: "numeric",
+      minute: "numeric",
+      second: "numeric",
+    })
+  );
   const [searchItem, setSearchItem] = useState("washington");
   const readUserInput = useRef("");
 
@@ -19,12 +28,24 @@ const App = () => {
         return weatherDetails(data);
       })
       .then(dataObj => {
+        console.log(dataObj);
+
         //set returned object as weatherdata state
         setWeatherData(dataObj);
       })
       .catch(err => {
         console.log(err);
       });
+
+    setInterval(() => {
+      setCurrentTime(
+        new Date().toLocaleString("en-US", {
+          hour: "numeric",
+          minute: "numeric",
+          second: "numeric",
+        })
+      );
+    }, 1000);
   }, [searchItem]);
 
   const submitHandler = event => {
@@ -37,33 +58,37 @@ const App = () => {
     console.log(newUserinput);
 
     fetch(
-      `https://api.openweathermap.org/data/2.5/weather?q=${newUserinput}&appid=${API_OPENWEATHER}&units=metric`
+      `https://api.openweathermap.org/data/2.5/weather?q=${newUserinput}&appid=${API_OPENWEATHER}&units=metric`,
+      { mode: "cors" }
     )
       .then(response => response.json())
       .then(data => {
-        console.log(data);
+        // console.log(data);
 
         return weatherDetails(data);
       })
-      .then(dataObj => setWeatherData(dataObj))
+      .then(dataObj => {
+        setWeatherData(dataObj);
+      })
       .catch(err => {
         console.log(err);
       });
   };
 
-  function weatherDetails(data) {
+  const weatherDetails = data => {
     // destructure json data into different variables like temp, name etc
     const { temp } = data.main,
       { country } = data.sys,
       { name } = data,
+      { timezone } = data,
       { icon } = data.weather[0],
       { description } = data.weather[0];
 
     const imgUrl = `https://openweathermap.org/img/w/${icon}.png`;
 
     // return destructured variables as an object
-    return { temp, country, name, imgUrl, description };
-  }
+    return { temp, country, name, timezone, imgUrl, description };
+  };
 
   return (
     <>
@@ -75,7 +100,6 @@ const App = () => {
             type="text"
             placeholder="Enter Country..."
             ref={readUserInput}
-            // onChange={changeHandler}
           />
           <img src={search} alt="search icon" />
         </form>
@@ -108,8 +132,7 @@ const App = () => {
                 {weatherData.name}
                 <sup> {weatherData.country}</sup>
               </span>
-              <span className={styles["city_date-time"]}>pending</span>
-              {/* <span className={styles["city_date-time"]}>{currentTime}</span> */}
+              <span className={styles["city_date-time"]}>{currentTime}</span>
             </p>
 
             <p className={styles["weather-icon"]}>
@@ -119,6 +142,7 @@ const App = () => {
           </>
         )}
       </div>
+
       {/* written on 26th Jan, 2022 */}
       <div className={styles.version}>
         <p>&copy; {new Date().getUTCFullYear()} V 0.1.0</p>
