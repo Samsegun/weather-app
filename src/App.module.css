@@ -98,7 +98,7 @@ span {
 
 .weather-icon img {
   width: 70px;
-  animation: rotate 10s linear infinite;
+  /* animation: rotate 10s linear infinite; */
 }
 
 .weather-icon span {

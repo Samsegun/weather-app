@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import API_OPENWEATHER from "./API";
 import styles from "./App.module.css";
 import search from "./images/search.png";
+// import icons from "../public/icons";
 // import moment from "moment";
 // import "moment-timezone";
 
@@ -48,6 +49,7 @@ const App = () => {
     }, 1000);
   }, [searchItem]);
 
+  // submit handler
   const submitHandler = event => {
     event.preventDefault();
 
@@ -63,7 +65,7 @@ const App = () => {
     )
       .then(response => response.json())
       .then(data => {
-        // console.log(data);
+        console.log(data);
 
         return weatherDetails(data);
       })
@@ -84,10 +86,10 @@ const App = () => {
       { icon } = data.weather[0],
       { description } = data.weather[0];
 
-    const imgUrl = `https://openweathermap.org/img/w/${icon}.png`;
+    // const imgUrl = `https://openweathermap.org/img/w/${icon}.png`;
 
     // return destructured variables as an object
-    return { temp, country, name, timezone, imgUrl, description };
+    return { temp, country, name, timezone, icon, description };
   };
 
   return (
@@ -136,7 +138,10 @@ const App = () => {
             </p>
 
             <p className={styles["weather-icon"]}>
-              <img src={weatherData.imgUrl} alt="weather icon" />
+              <img
+                src={`${process.env.PUBLIC_URL}/icons/${weatherData.icon}.png`}
+                alt="weather icon"
+              />
               <span className="weather-desc">{weatherData.description}</span>
             </p>
           </>
