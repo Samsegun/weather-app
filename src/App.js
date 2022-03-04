@@ -15,7 +15,7 @@ const App = () => {
       second: "numeric",
     })
   );
-  const [searchItem, setSearchItem] = useState("washington");
+  const [searchItem, setSearchItem] = useState("lagos");
   const readUserInput = useRef("");
 
   useEffect(() => {
@@ -43,7 +43,6 @@ const App = () => {
         new Date().toLocaleString("en-US", {
           hour: "numeric",
           minute: "numeric",
-          second: "numeric",
         })
       );
     }, 1000);
