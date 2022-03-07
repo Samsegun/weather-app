@@ -9,13 +9,34 @@
 body {
   position: relative;
   font-family: "Quicksand", sans-serif;
-  height: 100vh;
+  min-height: 100vh;
   overflow: hidden;
-  background: linear-gradient(to right, rgba(3, 2, 0, 0.5), rgba(17, 8, 1, 0.5)),
-    url("./images/weather-bg1.jpg") center/cover no-repeat;
+  /* background: linear-gradient(to right, rgba(3, 2, 0, 0.5), rgba(17, 8, 1, 0.5)),
+    url("./images/weather-bg1.jpg") center/cover no-repeat; */
+  background: rgba(5, 5, 5, 0.885);
   color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 #root {
+  position: relative;
   max-width: 1440px;
+  background: url("./images/tom-barrett-hgGplX3PFBg-unsplash-min.jpg")
+    center/cover no-repeat;
+  height: 90vh;
+  width: 90%;
+  margin: 0 auto;
+  border-radius: 1rem;
+  animation: rotate 5s linear forwards;
+}
+
+@keyframes rotate {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
 }

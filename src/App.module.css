@@ -1,11 +1,22 @@
-.header {
-  position: relative;
-  margin: 3rem;
+.container {
+  width: 80%;
+  margin: 0 auto;
+  height: 80vh;
   display: flex;
+  flex-direction: column;
   justify-content: space-between;
 }
 
-.header form {
+.header {
+  position: relative;
+}
+
+.header h2 {
+  font-size: 1rem;
+  margin: 2rem 1rem;
+}
+
+/* .header form {
   position: relative;
   width: 17rem;
 }
@@ -56,35 +67,43 @@
 
 .search-results li a:hover {
   background: darkgray;
-}
+} */
 
 .weather-info {
-  position: absolute;
-  bottom: 20%;
-  left: 5%;
   display: flex;
-  column-gap: 1rem;
+  column-gap: 1.5rem;
   flex-wrap: wrap;
+  margin: 2rem;
+  align-items: end;
 }
 
 .temp {
-  font-size: 5rem;
-  margin-bottom: -2.5rem;
+  font-size: 4rem;
+  margin-bottom: -0.5rem;
 }
 
 .city {
-  align-self: end;
+  /* align-self: end; */
+  font-size: 1.5rem;
+  letter-spacing: 1px;
 }
 
-span {
+.city sup {
+  font-size: 0.8rem;
+}
+
+.city span {
+  font-size: 0.8rem;
+}
+/* span {
   display: block;
-}
+} */
 
-.city_name {
-  font-size: 2rem;
-}
+/* .city_name {
+  font-size: 1.5rem;
+} */
 
-.city_name sup {
+/* .city_name sup {
   font-size: 1.5rem;
 }
 
@@ -94,30 +113,25 @@ span {
 
 .weather-icon {
   align-self: end;
-}
+} */
 
 .weather-icon img {
-  width: 70px;
+  width: 40%;
   /* animation: rotate 10s linear infinite; */
 }
 
 .weather-icon span {
-  font-weight: bold;
+  /* font-weight: bold; */
   margin-top: -1rem;
 }
 
 .version {
   position: absolute;
-  right: 3%;
-  bottom: 10%;
+  left: 50%;
+  bottom: 1%;
   border-bottom: 1px solid;
   font-size: 0.85rem;
-}
-
-@keyframes rotate {
-  100% {
-    transform: rotate(360deg);
-  }
+  width: fit-content;
 }
 
 @media (max-width: 534px) {

@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import API_OPENWEATHER from "./API";
 import styles from "./App.module.css";
 import search from "./images/search.png";
@@ -6,15 +6,20 @@ import search from "./images/search.png";
 // import moment from "moment";
 // import "moment-timezone";
 
+const timeOptions = new Date();
+
+// {
+//   weekday: "long",
+//   hour: "numeric",
+//   minute: "numeric",
+//   day: "numeric",
+//   month: "short",
+//   year: "2-digit",
+// }
+
 const App = () => {
   const [weatherData, setWeatherData] = useState(null);
-  const [currentTime, setCurrentTime] = useState(
-    new Date().toLocaleString("en-US", {
-      hour: "numeric",
-      minute: "numeric",
-      second: "numeric",
-    })
-  );
+  const [currentTime, setCurrentTime] = useState(timeOptions);
   const [searchItem, setSearchItem] = useState("lagos");
   const readUserInput = useRef("");
 
@@ -39,12 +44,7 @@ const App = () => {
       });
 
     setInterval(() => {
-      setCurrentTime(
-        new Date().toLocaleString("en-US", {
-          hour: "numeric",
-          minute: "numeric",
-        })
-      );
+      setCurrentTime(currentTime);
     }, 1000);
   }, [searchItem]);
 
@@ -92,11 +92,11 @@ const App = () => {
   };
 
   return (
-    <>
+    <div className={styles.container}>
       <header className={styles.header}>
         <h2>the.weather</h2>
 
-        <form onSubmit={submitHandler}>
+        {/* <form onSubmit={submitHandler}>
           <input
             type="text"
             placeholder="Enter Country..."
@@ -115,7 +115,7 @@ const App = () => {
           <li>
             <a href="/">hi</a>
           </li>
-        </ul>
+        </ul> */}
       </header>
 
       {/* main body */}
@@ -124,23 +124,33 @@ const App = () => {
 
         {weatherData && (
           <>
-            <h1 className={styles.temp}>
-              {Math.floor(weatherData.temp)}&deg;C
-            </h1>
+            <h1 className={styles.temp}>{Math.floor(weatherData.temp)}&deg;</h1>
 
             <p className={styles.city}>
-              <span className={styles["city_name"]}>
+              {weatherData.name}
+              <sup>{weatherData.country}</sup> <br />
+              <span className={styles["city_date-time"]}>
+                {currentTime.getHours()}.{currentTime.getMinutes()} -
+                {new Date().toLocaleDateString("en-US", {
+                  weekday: "long",
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
+                })}
+              </span>
+              {/* <span className={styles["city_name"]}>
                 {weatherData.name}
                 <sup> {weatherData.country}</sup>
               </span>
-              <span className={styles["city_date-time"]}>{currentTime}</span>
+              <span className={styles["city_date-time"]}>{currentTime}</span> */}
             </p>
 
             <p className={styles["weather-icon"]}>
               <img
                 src={`${process.env.PUBLIC_URL}/icons/${weatherData.icon}.png`}
                 alt="weather icon"
-              />
+              />{" "}
+              <br />
               <span className="weather-desc">{weatherData.description}</span>
             </p>
           </>
@@ -151,7 +161,7 @@ const App = () => {
       <div className={styles.version}>
         <p>&copy; {new Date().getUTCFullYear()} V 0.1.0</p>
       </div>
-    </>
+    </div>
   );
 };
 
