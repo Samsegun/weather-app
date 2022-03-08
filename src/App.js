@@ -6,27 +6,30 @@ import search from "./images/magnifying-glass.png";
 // import moment from "moment";
 // import "moment-timezone";
 
-// const time = new Date();
+const clock = () => {
+  const hours = (new Date().getHours() < 10 ? "0" : "") + new Date().getHours();
 
-// {
-//   weekday: "long",
-//   hour: "numeric",
-//   minute: "numeric",
-//   day: "numeric",
-//   month: "short",
-//   year: "2-digit",
-// }
+  const minutes =
+    (new Date().getMinutes() < 10 ? "0" : "") + new Date().getMinutes();
+
+  const seconds = `${
+    new Date().getSeconds() < 10 ? "0" : ""
+  }${new Date().getSeconds()}`;
+
+  const weekday = new Date().toLocaleString("en-US", { weekday: "long" });
+
+  const day = new Date().toLocaleString("en-US", { day: "numeric" });
+
+  const month = new Date().toLocaleString("en-US", { month: "short" });
+
+  const year = new Date().toLocaleString("en-US", { year: "2-digit" });
+
+  return `${hours}:${minutes}:${seconds} - ${weekday}, ${day} ${month} '${year}`;
+};
 
 const App = () => {
   const [weatherData, setWeatherData] = useState(null);
-  const [currentTime, setCurrentTime] = useState(
-    new Date().toLocaleDateString("en-US", {
-      weekday: "long",
-      day: "numeric",
-      month: "short",
-      year: "2-digit",
-    })
-  );
+  const [currentTime, setCurrentTime] = useState(clock());
   const [searchItem, setSearchItem] = useState("lagos");
   const readUserInput = useRef("");
 
@@ -50,20 +53,11 @@ const App = () => {
         console.log(err);
       });
 
-    console.log(currentTime);
-
-    setInterval(() => {
-      setCurrentTime(
-        currentTime.toLocaleString("en-US", {
-          weekday: "long",
-          day: "numeric",
-          month: "short",
-          year: "2-digit",
-        })
-      );
+    let time = setInterval(() => {
+      setCurrentTime(clock());
     }, 1000);
 
-    // return () => clearInterval(timer);
+    return () => clearInterval(time);
   }, [searchItem]);
 
   // submit handler
@@ -126,20 +120,7 @@ const App = () => {
             <p className={styles.city}>
               {weatherData.name}
               <sup>{weatherData.country}</sup> <br />
-              <span className={styles["city_date-time"]}>
-                {currentTime}
-                {/* {new Date().toLocaleString("en-US", {
-                  weekday: "long",
-                  year: "numeric",
-                  month: "long",
-                  day: "numeric",
-                })} */}
-              </span>
-              {/* <span className={styles["city_name"]}>
-                {weatherData.name}
-                <sup> {weatherData.country}</sup>
-              </span>
-              <span className={styles["city_date-time"]}>{currentTime}</span> */}
+              <span className={styles["city_date-time"]}>{currentTime}</span>
             </p>
 
             <p className={styles["weather-icon"]}>
@@ -189,13 +170,25 @@ const App = () => {
 
           <ul>
             <li>
-              <span>Cloudy</span> <span>86%</span>
+              <span>Feels like</span> <span>21 &deg;C</span>
             </li>
             <li>
               <span>Humidity</span> <span>62%</span>
             </li>
             <li>
-              <span>Wind</span> <span>8km/h</span>
+              <span>Wind Speed</span> <span>8km/hr</span>
+            </li>
+            <li>
+              <span>Desscription</span> <span>Light rain</span>
+            </li>
+            <li>
+              <span>Country</span> <span>GB</span>
+            </li>
+            <li>
+              <span>Sunrise</span> <span>21:08</span>
+            </li>
+            <li>
+              <span>Sunset</span> <span>12:08</span>
             </li>
           </ul>
         </div>

@@ -23,6 +23,19 @@
   height: 100%;
   background: rgba(79, 79, 79, 0.823);
   padding: 1rem 2rem;
+  overflow-y: scroll;
+}
+
+.details::-webkit-scrollbar {
+  width: 2px;
+}
+
+.details::-webkit-scrollbar-track {
+  background-color: rgb(79, 79, 79);
+}
+
+.details::-webkit-scrollbar-thumb {
+  background-color: rgb(237, 237, 237);
 }
 
 form {
@@ -31,7 +44,7 @@ form {
 }
 
 form input {
-  width: 70%;
+  width: 80%;
   background: transparent;
   height: 3rem;
   font-size: 1rem;
