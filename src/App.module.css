@@ -16,58 +16,92 @@
   margin: 2rem 1rem;
 }
 
-/* .header form {
-  position: relative;
-  width: 17rem;
-}
-
-.header input {
-  width: 100%;
-  outline: none;
-  border: none;
-  border-radius: 10px;
-  font-size: 1rem;
-  padding: 0.5rem;
-}
-
-.header img {
-  width: 30px;
+.details {
   position: absolute;
-  right: 6px;
-  top: 3px;
-  background: rgb(252, 252, 252);
+  right: 0;
+  width: 35%;
+  height: 100%;
+  background: rgba(79, 79, 79, 0.823);
+  padding: 1rem 2rem;
+}
+
+form {
+  width: 100%;
+  display: flex;
+}
+
+form input {
+  width: 70%;
+  background: transparent;
+  height: 3rem;
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.467);
+  border: 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.624);
+  outline: none;
+}
+
+.search-icon {
+  width: 64px;
+  position: absolute;
+  top: 0;
+  right: 0;
+  background: rgb(215, 118, 10);
+  padding: 0.5rem;
   cursor: pointer;
 }
 
 .search-results {
-  position: absolute;
-  display: none;
-  right: 6px;
-  top: 2.3rem;
   list-style-type: none;
-  background: white;
-  width: 12.5rem;
-  height: 10rem;
-  overflow: hidden;
-  color: rgb(41, 40, 40);
+  /* background: rgba(232, 229, 229, 0.849); */
+  width: 100%;
+  height: auto;
+  margin-top: 2rem;
+  font-size: 0.9rem;
+  /* overflow-x: hidden;
+  overflow-y: scroll; */
+  border-bottom: 1px solid rgba(255, 255, 255, 0.624);
 }
 
 .search-results li {
-  padding: 0.5rem;
-}
-
-.search-results li:not(:last-of-type) {
-  border-bottom: 1px solid;
+  padding: 1rem 0;
 }
 
 .search-results li a {
-  display: block;
+  color: rgba(255, 255, 255, 0.467);
   text-decoration: none;
+  display: block;
+  transition: all 0.3s ease;
 }
 
 .search-results li a:hover {
-  background: darkgray;
-} */
+  background: rgba(79, 79, 79);
+}
+
+.weather-details {
+  margin: 2rem 0;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.624);
+}
+
+.weather-details__title {
+  font-size: 1rem;
+  letter-spacing: 1px;
+}
+
+.weather-details ul {
+  list-style: none;
+  margin-top: 2rem;
+}
+
+.weather-details li {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.9rem;
+  padding: 0.7rem 0;
+  color: rgba(255, 255, 255, 0.796);
+  transition: all 0.3s ease;
+}
 
 .weather-info {
   display: flex;
@@ -83,7 +117,6 @@
 }
 
 .city {
-  /* align-self: end; */
   font-size: 1.5rem;
   letter-spacing: 1px;
 }
@@ -117,11 +150,9 @@
 
 .weather-icon img {
   width: 40%;
-  /* animation: rotate 10s linear infinite; */
 }
 
 .weather-icon span {
-  /* font-weight: bold; */
   margin-top: -1rem;
 }
 

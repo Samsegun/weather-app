@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import API_OPENWEATHER from "./API";
 import styles from "./App.module.css";
-import search from "./images/search.png";
+import search from "./images/magnifying-glass.png";
 // import icons from "../public/icons";
 // import moment from "moment";
 // import "moment-timezone";
@@ -113,27 +113,6 @@ const App = () => {
     <div className={styles.container}>
       <header className={styles.header}>
         <h2>the.weather</h2>
-
-        {/* <form onSubmit={submitHandler}>
-          <input
-            type="text"
-            placeholder="Enter Country..."
-            ref={readUserInput}
-          />
-          <img src={search} alt="search icon" />
-        </form>
-
-        <ul className={styles["search-results"]}>
-          <li>
-            <a href="/">hi</a>
-          </li>
-          <li>
-            <a href="/">hi</a>
-          </li>
-          <li>
-            <a href="/">hi</a>
-          </li>
-        </ul> */}
       </header>
 
       {/* main body */}
@@ -173,6 +152,53 @@ const App = () => {
             </p>
           </>
         )}
+      </div>
+
+      <div className={styles.details}>
+        <form onSubmit={submitHandler}>
+          <input
+            type="text"
+            placeholder="Another Location..."
+            ref={readUserInput}
+          />
+          <img
+            className={styles["search-icon"]}
+            src={search}
+            alt="search icon"
+          />
+        </form>
+
+        <ul className={styles["search-results"]}>
+          <li>
+            <a href="/">Lagos</a>
+          </li>
+          <li>
+            <a href="/">New York</a>
+          </li>
+          <li>
+            <a href="/">London</a>
+          </li>
+          <li>
+            <a href="/">Moscow</a>
+          </li>
+        </ul>
+
+        {/* weather details */}
+        <div className={styles["weather-details"]}>
+          <h2 className={styles["weather-details__title"]}>Weather Details</h2>
+
+          <ul>
+            <li>
+              <span>Cloudy</span> <span>86%</span>
+            </li>
+            <li>
+              <span>Humidity</span> <span>62%</span>
+            </li>
+            <li>
+              <span>Wind</span> <span>8km/h</span>
+            </li>
+          </ul>
+        </div>
       </div>
 
       {/* written on 26th Jan, 2022 */}
