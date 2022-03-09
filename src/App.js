@@ -3,7 +3,7 @@ import API_OPENWEATHER from "./API";
 import styles from "./App.module.css";
 import search from "./images/magnifying-glass.png";
 // import icons from "../public/icons";
-// import moment from "moment";
+import moment from "moment";
 // import "moment-timezone";
 
 const clock = () => {
@@ -12,9 +12,9 @@ const clock = () => {
   const minutes =
     (new Date().getMinutes() < 10 ? "0" : "") + new Date().getMinutes();
 
-  const seconds = `${
-    new Date().getSeconds() < 10 ? "0" : ""
-  }${new Date().getSeconds()}`;
+  // const seconds = `${
+  //   new Date().getSeconds() < 10 ? "0" : ""
+  // }${new Date().getSeconds()}`;
 
   const weekday = new Date().toLocaleString("en-US", { weekday: "long" });
 
@@ -24,7 +24,7 @@ const clock = () => {
 
   const year = new Date().toLocaleString("en-US", { year: "2-digit" });
 
-  return `${hours}:${minutes}:${seconds} - ${weekday}, ${day} ${month} '${year}`;
+  return `${hours}:${minutes} - ${weekday}, ${day} ${month} '${year}`;
 };
 
 const App = () => {
@@ -64,7 +64,7 @@ const App = () => {
   const submitHandler = event => {
     event.preventDefault();
 
-    const userInput = readUserInput.current.value;
+    let userInput = readUserInput.current.value;
 
     const newUserinput = userInput.trim().toLowerCase();
 
@@ -81,6 +81,7 @@ const App = () => {
         return weatherDetails(data);
       })
       .then(dataObj => {
+        readUserInput.current.value = "";
         setWeatherData(dataObj);
       })
       .catch(err => {
@@ -90,17 +91,36 @@ const App = () => {
 
   const weatherDetails = data => {
     // destructure json data into different variables like temp, name etc
-    const { temp } = data.main,
+    const { temp, humidity, feels_like: feelsLike } = data.main,
       { country } = data.sys,
       { name } = data,
       { timezone } = data,
-      { icon } = data.weather[0],
-      { description } = data.weather[0];
+      // { icon } = data.weather[0],
+      { description, icon, main } = data.weather[0],
+      { sunrise } = data.sys,
+      { sunset } = data.sys,
+      { speed } = data.wind;
+
+    let sunriseTime = moment.unix(sunrise).format("HH:MM");
+    let sunsetTime = moment.unix(sunset).format("HH:MM");
 
     // const imgUrl = `https://openweathermap.org/img/w/${icon}.png`;
 
     // return destructured variables as an object
-    return { temp, country, name, timezone, icon, description };
+    return {
+      temp,
+      feelsLike,
+      humidity,
+      country,
+      name,
+      timezone,
+      icon,
+      description,
+      main,
+      sunriseTime,
+      sunsetTime,
+      speed,
+    };
   };
 
   return (
@@ -118,8 +138,8 @@ const App = () => {
             <h1 className={styles.temp}>{Math.floor(weatherData.temp)}&deg;</h1>
 
             <p className={styles.city}>
-              {weatherData.name}
-              <sup>{weatherData.country}</sup> <br />
+              <span className={styles["city_name"]}>{weatherData.name}</span>
+              <br />
               <span className={styles["city_date-time"]}>{currentTime}</span>
             </p>
 
@@ -129,74 +149,81 @@ const App = () => {
                 alt="weather icon"
               />{" "}
               <br />
-              <span className="weather-desc">{weatherData.description}</span>
+              <span className="weather-desc">{weatherData.main}</span>
             </p>
           </>
         )}
       </div>
 
-      <div className={styles.details}>
-        <form onSubmit={submitHandler}>
-          <input
-            type="text"
-            placeholder="Another Location..."
-            ref={readUserInput}
-          />
-          <img
-            className={styles["search-icon"]}
-            src={search}
-            alt="search icon"
-          />
-        </form>
+      {weatherData && (
+        <div className={styles.details}>
+          <form onSubmit={submitHandler}>
+            <input
+              type="text"
+              placeholder="Another Location..."
+              ref={readUserInput}
+            />
+            <img
+              className={styles["search-icon"]}
+              src={search}
+              alt="search icon"
+              onClick={submitHandler}
+            />
+          </form>
 
-        <ul className={styles["search-results"]}>
-          <li>
-            <a href="/">Lagos</a>
-          </li>
-          <li>
-            <a href="/">New York</a>
-          </li>
-          <li>
-            <a href="/">London</a>
-          </li>
-          <li>
-            <a href="/">Moscow</a>
-          </li>
-        </ul>
-
-        {/* weather details */}
-        <div className={styles["weather-details"]}>
-          <h2 className={styles["weather-details__title"]}>Weather Details</h2>
-
-          <ul>
+          <ul className={styles["search-results"]}>
             <li>
-              <span>Feels like</span> <span>21 &deg;C</span>
+              <a href="/">Lagos</a>
             </li>
             <li>
-              <span>Humidity</span> <span>62%</span>
+              <a href="/">New York</a>
             </li>
             <li>
-              <span>Wind Speed</span> <span>8km/hr</span>
+              <a href="/">London</a>
             </li>
             <li>
-              <span>Desscription</span> <span>Light rain</span>
-            </li>
-            <li>
-              <span>Country</span> <span>GB</span>
-            </li>
-            <li>
-              <span>Sunrise</span> <span>21:08</span>
-            </li>
-            <li>
-              <span>Sunset</span> <span>12:08</span>
+              <a href="/">Moscow</a>
             </li>
           </ul>
+
+          {/* weather details */}
+          <div className={styles["weather-details"]}>
+            <h2 className={styles["weather-details__title"]}>
+              Weather Details
+            </h2>
+
+            <ul>
+              <li>
+                <span>Feels like</span>
+                <span>{Math.floor(weatherData.feelsLike)}&deg;C</span>
+              </li>
+              <li>
+                <span>Humidity</span> <span>{weatherData.humidity}%</span>
+              </li>
+              <li>
+                <span>Wind Speed</span>{" "}
+                <span>{Math.floor(weatherData.speed)}km/hr</span>
+              </li>
+              <li>
+                <span>Desscription</span> <span>{weatherData.description}</span>
+              </li>
+              <li>
+                <span>Country</span> <span>{weatherData.country}</span>
+              </li>
+              <li>
+                <span>Sunrise</span> <span>{weatherData.sunriseTime}</span>
+              </li>
+              <li>
+                <span>Sunset</span> <span>{weatherData.sunsetTime}</span>
+              </li>
+            </ul>
+          </div>
         </div>
-      </div>
+      )}
 
       {/* written on 26th Jan, 2022 */}
       <div className={styles.version}>
-        <p>&copy; {new Date().getUTCFullYear()} V 0.1.0</p>
+        <p>{new Date().getUTCFullYear()} V 0.1.0</p>
       </div>
     </div>
   );
