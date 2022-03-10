@@ -28,7 +28,10 @@ const clock = () => {
 };
 
 const App = () => {
-  const [weatherData, setWeatherData] = useState(null);
+  const [weatherData, setWeatherData] = useState({
+    cod: "404",
+    message: "loading...",
+  });
   const [currentTime, setCurrentTime] = useState(clock());
   const [searchItem, setSearchItem] = useState("lagos");
   const readUserInput = useRef("");
@@ -41,7 +44,11 @@ const App = () => {
       .then(data => {
         console.log(data);
 
-        return weatherDetails(data);
+        if (data.cod > 200) {
+          return data;
+        } else {
+          return weatherDetails(data);
+        }
       })
       .then(dataObj => {
         console.log(dataObj);
@@ -68,32 +75,21 @@ const App = () => {
 
     const newUserinput = userInput.trim().toLowerCase();
 
-    console.log(newUserinput);
+    setSearchItem(newUserinput);
+    readUserInput.current.value = "";
+  };
 
-    fetch(
-      `https://api.openweathermap.org/data/2.5/weather?q=${newUserinput}&appid=${API_OPENWEATHER}&units=metric`,
-      { mode: "cors" }
-    )
-      .then(response => response.json())
-      .then(data => {
-        console.log(data);
-
-        return weatherDetails(data);
-      })
-      .then(dataObj => {
-        readUserInput.current.value = "";
-        setWeatherData(dataObj);
-      })
-      .catch(err => {
-        console.log(err);
-      });
+  const clickHandler = event => {
+    if (event.target.textContent) {
+      setSearchItem(event.target.textContent);
+    }
   };
 
   const weatherDetails = data => {
     // destructure json data into different variables like temp, name etc
     const { temp, humidity, feels_like: feelsLike } = data.main,
       { country } = data.sys,
-      { name } = data,
+      { name, cod } = data,
       { timezone } = data,
       // { icon } = data.weather[0],
       { description, icon, main } = data.weather[0],
@@ -101,8 +97,12 @@ const App = () => {
       { sunset } = data.sys,
       { speed } = data.wind;
 
+    // convert sunrise and sunset time with moment
     let sunriseTime = moment.unix(sunrise).format("HH:MM");
     let sunsetTime = moment.unix(sunset).format("HH:MM");
+
+    // convert windspeed from m/s to kmph
+    let windSpeed = 3.6 * speed;
 
     // const imgUrl = `https://openweathermap.org/img/w/${icon}.png`;
 
@@ -113,13 +113,14 @@ const App = () => {
       humidity,
       country,
       name,
+      cod,
       timezone,
       icon,
       description,
       main,
       sunriseTime,
       sunsetTime,
-      speed,
+      windSpeed,
     };
   };
 
@@ -131,9 +132,9 @@ const App = () => {
 
       {/* main body */}
       <div className={styles["weather-info"]}>
-        {!weatherData && <h1>Loading...</h1>}
+        {+weatherData.cod > 200 && <h1>{weatherData.message}</h1>}
 
-        {weatherData && (
+        {+weatherData.cod === 200 && (
           <>
             <h1 className={styles.temp}>{Math.floor(weatherData.temp)}&deg;</h1>
 
@@ -155,38 +156,30 @@ const App = () => {
         )}
       </div>
 
-      {weatherData && (
-        <div className={styles.details}>
-          <form onSubmit={submitHandler}>
-            <input
-              type="text"
-              placeholder="Another Location..."
-              ref={readUserInput}
-            />
-            <img
-              className={styles["search-icon"]}
-              src={search}
-              alt="search icon"
-              onClick={submitHandler}
-            />
-          </form>
+      {/* weather details */}
+      <div className={styles.details}>
+        <form onSubmit={submitHandler}>
+          <input
+            type="text"
+            placeholder="Another Location..."
+            ref={readUserInput}
+          />
+          <img
+            className={styles["search-icon"]}
+            src={search}
+            alt="search icon"
+            onClick={submitHandler}
+          />
+        </form>
 
-          <ul className={styles["search-results"]}>
-            <li>
-              <a href="/">Lagos</a>
-            </li>
-            <li>
-              <a href="/">New York</a>
-            </li>
-            <li>
-              <a href="/">London</a>
-            </li>
-            <li>
-              <a href="/">Moscow</a>
-            </li>
-          </ul>
+        <ul className={styles["search-results"]} onClick={clickHandler}>
+          <li>Lagos</li>
+          <li>New York</li>
+          <li>London</li>
+          <li>Moscow</li>
+        </ul>
 
-          {/* weather details */}
+        {+weatherData.cod === 200 && (
           <div className={styles["weather-details"]}>
             <h2 className={styles["weather-details__title"]}>
               Weather Details
@@ -202,10 +195,10 @@ const App = () => {
               </li>
               <li>
                 <span>Wind Speed</span>{" "}
-                <span>{Math.floor(weatherData.speed)}km/hr</span>
+                <span>{Math.floor(weatherData.windSpeed)} KMPH</span>
               </li>
               <li>
-                <span>Desscription</span> <span>{weatherData.description}</span>
+                <span>Description</span> <span>{weatherData.description}</span>
               </li>
               <li>
                 <span>Country</span> <span>{weatherData.country}</span>
@@ -218,8 +211,8 @@ const App = () => {
               </li>
             </ul>
           </div>
-        </div>
-      )}
+        )}
+      </div>
 
       {/* written on 26th Jan, 2022 */}
       <div className={styles.version}>
