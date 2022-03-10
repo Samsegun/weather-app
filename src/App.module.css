@@ -54,6 +54,10 @@ form input {
   outline: none;
 }
 
+form .search-error {
+  border-bottom: 2px solid red;
+}
+
 .search-icon {
   width: 64px;
   position: absolute;
@@ -202,3 +206,5 @@ form input {
     transform: translate(-50%, 50%);
   }
 }
+
+/* break points: 969px, */

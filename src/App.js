@@ -75,8 +75,16 @@ const App = () => {
 
     const newUserinput = userInput.trim().toLowerCase();
 
-    setSearchItem(newUserinput);
-    readUserInput.current.value = "";
+    if (parseInt(newUserinput)) {
+      setWeatherData({
+        cod: "404",
+        message: "Please enter non numeric data",
+      });
+      readUserInput.current.value = userInput;
+    } else {
+      setSearchItem(newUserinput);
+      readUserInput.current.value = "";
+    }
   };
 
   const clickHandler = event => {
@@ -134,7 +142,7 @@ const App = () => {
       <div className={styles["weather-info"]}>
         {+weatherData.cod > 200 && <h1>{weatherData.message}</h1>}
 
-        {+weatherData.cod === 200 && (
+        {+weatherData.cod <= 200 && (
           <>
             <h1 className={styles.temp}>{Math.floor(weatherData.temp)}&deg;</h1>
 
@@ -163,6 +171,7 @@ const App = () => {
             type="text"
             placeholder="Another Location..."
             ref={readUserInput}
+            className={+weatherData.cod > 200 ? styles["search-error"] : ""}
           />
           <img
             className={styles["search-icon"]}
@@ -179,7 +188,7 @@ const App = () => {
           <li>Moscow</li>
         </ul>
 
-        {+weatherData.cod === 200 && (
+        {+weatherData.cod <= 200 && (
           <div className={styles["weather-details"]}>
             <h2 className={styles["weather-details__title"]}>
               Weather Details
