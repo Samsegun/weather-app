@@ -133,6 +133,10 @@
   align-items: end;
 }
 
+.error-message {
+  padding: 0 1rem;
+}
+
 .temp {
   font-size: 5rem;
   margin-bottom: -0.5rem;
@@ -238,12 +242,15 @@
   }
   .mobile-form_input {
     width: 100%;
-    height: 40px;
+    height: 50px;
     font-size: 1.2rem;
+    padding: 0 1rem;
     outline: none;
+    border: none;
+    background: rgba(255, 255, 255, 0.8);
   }
   .search-icon {
-    width: 40px;
+    width: 50px;
   }
   .search-results {
     display: none;
@@ -272,5 +279,23 @@
   }
   .weather-details .data {
     font-size: 1.1rem;
+  }
+}
+
+@media (min-width: 623px) {
+  .mobile-form {
+    left: 2%;
+  }
+}
+
+@media (min-width: 829px) and (max-width: 989px) {
+  .error-message {
+    font-size: 1.5rem;
+  }
+  .temp {
+    font-size: 4rem;
+  }
+  .city_name {
+    font-size: inherit;
   }
 }

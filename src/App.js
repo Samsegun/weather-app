@@ -79,7 +79,7 @@ const App = () => {
     if (parseInt(newUserinput)) {
       setWeatherData({
         cod: "404",
-        message: "Please enter non numeric data",
+        message: "Please enter valid values!",
       });
       text.current.value = userInput;
     } else {
@@ -159,7 +159,9 @@ const App = () => {
 
       {/* main body */}
       <div className={styles["weather-info"]}>
-        {+weatherData.cod > 200 && <h1>{weatherData.message}</h1>}
+        {+weatherData.cod > 200 && (
+          <h1 className={styles["error-message"]}>{weatherData.message}</h1>
+        )}
 
         {+weatherData.cod <= 200 && (
           <>
