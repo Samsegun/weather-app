@@ -29,7 +29,7 @@ body {
   height: 90vh;
   width: 90%;
   margin: 0 auto;
-  border-radius: 61px;
+  border-radius: 60px;
   box-shadow: 18px 18px 36px #1a1818, -18px -18px 36px #262525;
   /* animation: fade-in 5s linear forwards; */
 }
@@ -40,5 +40,14 @@ body {
   }
   100% {
     opacity: 1;
+  }
+}
+
+@media (max-width: 828px) {
+  #root {
+    width: 100%;
+    min-height: 100vh;
+    border-radius: 0;
+    overflow: hidden;
   }
 }

@@ -34,6 +34,7 @@ const App = () => {
   });
   const [currentTime, setCurrentTime] = useState(clock());
   const [searchItem, setSearchItem] = useState("lagos");
+  const readUserInputMobile = useRef("");
   const readUserInput = useRef("");
 
   useEffect(() => {
@@ -68,10 +69,10 @@ const App = () => {
   }, [searchItem]);
 
   // submit handler
-  const submitHandler = event => {
-    event.preventDefault();
+  const submitHandler = (e, text) => {
+    e.preventDefault();
 
-    let userInput = readUserInput.current.value;
+    let userInput = text.current.value;
 
     const newUserinput = userInput.trim().toLowerCase();
 
@@ -80,10 +81,10 @@ const App = () => {
         cod: "404",
         message: "Please enter non numeric data",
       });
-      readUserInput.current.value = userInput;
+      text.current.value = userInput;
     } else {
       setSearchItem(newUserinput);
-      readUserInput.current.value = "";
+      text.current.value = "";
     }
   };
 
@@ -138,6 +139,24 @@ const App = () => {
         <h2>the.weather</h2>
       </header>
 
+      <form
+        className={styles["mobile-form"]}
+        onSubmit={e => submitHandler(e, readUserInputMobile)}
+      >
+        <input
+          type="text"
+          placeholder="Another Location..."
+          ref={readUserInputMobile}
+          className={styles["mobile-form_input"]}
+        />
+        <img
+          className={styles["search-icon"]}
+          src={search}
+          alt="search icon"
+          onClick={e => submitHandler(e, readUserInputMobile)}
+        />
+      </form>
+
       {/* main body */}
       <div className={styles["weather-info"]}>
         {+weatherData.cod > 200 && <h1>{weatherData.message}</h1>}
@@ -166,7 +185,10 @@ const App = () => {
 
       {/* weather details */}
       <div className={styles.details}>
-        <form onSubmit={submitHandler}>
+        <form
+          className={styles["desktop-form"]}
+          onSubmit={e => submitHandler(e, readUserInput)}
+        >
           <input
             type="text"
             placeholder="Another Location..."
@@ -177,7 +199,7 @@ const App = () => {
             className={styles["search-icon"]}
             src={search}
             alt="search icon"
-            onClick={submitHandler}
+            onClick={e => submitHandler(e, readUserInput)}
           />
         </form>
 
@@ -196,27 +218,36 @@ const App = () => {
 
             <ul>
               <li>
-                <span>Feels like</span>
-                <span>{Math.floor(weatherData.feelsLike)}&deg;C</span>
+                <span className={styles.desc}>Feels like</span>
+                <span className={styles.data}>
+                  {Math.floor(weatherData.feelsLike)}&deg;C
+                </span>
               </li>
               <li>
-                <span>Humidity</span> <span>{weatherData.humidity}%</span>
+                <span className={styles.desc}>Humidity</span>{" "}
+                <span className={styles.data}>{weatherData.humidity}%</span>
               </li>
               <li>
-                <span>Wind Speed</span>{" "}
-                <span>{Math.floor(weatherData.windSpeed)} KMPH</span>
+                <span className={styles.desc}>Wind Speed</span>{" "}
+                <span className={styles.data}>
+                  {Math.floor(weatherData.windSpeed)} KMPH
+                </span>
               </li>
               <li>
-                <span>Description</span> <span>{weatherData.description}</span>
+                <span className={styles.desc}>Description</span>{" "}
+                <span className={styles.data}>{weatherData.description}</span>
               </li>
               <li>
-                <span>Country</span> <span>{weatherData.country}</span>
+                <span className={styles.desc}>Country</span>{" "}
+                <span className={styles.data}>{weatherData.country}</span>
               </li>
               <li>
-                <span>Sunrise</span> <span>{weatherData.sunriseTime}</span>
+                <span className={styles.desc}>Sunrise</span>{" "}
+                <span className={styles.data}>{weatherData.sunriseTime}</span>
               </li>
               <li>
-                <span>Sunset</span> <span>{weatherData.sunsetTime}</span>
+                <span className={styles.desc}>Sunset</span>{" "}
+                <span className={styles.data}>{weatherData.sunsetTime}</span>
               </li>
             </ul>
           </div>
