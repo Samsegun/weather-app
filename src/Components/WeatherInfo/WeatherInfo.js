@@ -1,10 +1,15 @@
 import styles from "../../App.module.css";
 
-const WeatherInfo = ({ weatherData, currentTime }) => {
+const WeatherInfo = ({ weatherData, currentTime, fetchError }) => {
   return (
     <div className={styles["weather-info"]}>
       {+weatherData.cod > 200 && (
         <h1 className={styles["error-message"]}>{weatherData.message}</h1>
+      )}
+
+      {/* not working yet */}
+      {fetchError && (
+        <h1 className={styles["fetch-error"]}>{fetchError.status}</h1>
       )}
 
       {+weatherData.cod <= 200 && (

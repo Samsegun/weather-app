@@ -33,6 +33,7 @@ const App = () => {
     cod: "404",
     message: "loading...",
   });
+  const [fetchError, setFetchError] = useState(null);
   const [currentTime, setCurrentTime] = useState(clock());
   const [searchItem, setSearchItem] = useState("lagos");
 
@@ -54,6 +55,8 @@ const App = () => {
       })
       .catch(err => {
         console.log(err);
+        console.log(typeof err);
+        setFetchError(err);
       });
 
     let time = setInterval(() => {
@@ -133,7 +136,11 @@ const App = () => {
       <MobileForm submitHandler={submitHandler} />
 
       {/* main body */}
-      <WeatherInfo weatherData={weatherData} currentTime={currentTime} />
+      <WeatherInfo
+        weatherData={weatherData}
+        currentTime={currentTime}
+        fetchError={fetchError}
+      />
 
       {/* weather details */}
       <WeatherDetails
