@@ -14,7 +14,10 @@ const WeatherInfo = ({ weatherData, currentTime, fetchError }) => {
 
       {+weatherData.cod <= 200 && (
         <>
-          <h1 className={styles.temp}>{Math.floor(weatherData.temp)}&deg;C</h1>
+          <h1 className={styles.temp}>
+            {Math.floor(weatherData.temp)}&deg;
+            <span className={styles.celsius}>C</span>
+          </h1>
 
           <p className={styles.city}>
             <span className={styles["city_name"]}>{weatherData.name}</span>

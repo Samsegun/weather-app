@@ -30,7 +30,7 @@ body {
   margin: 0 auto;
   border-radius: 60px;
   box-shadow: 18px 18px 36px #1a1818, -18px -18px 36px #262525;
-  animation: fade-in 5s linear forwards;
+  animation: fade-in 4s ease forwards;
 }
 
 @keyframes fade-in {
