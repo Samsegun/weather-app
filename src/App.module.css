@@ -172,7 +172,7 @@
 
 .version {
   position: absolute;
-  left: 50%;
+  left: 45%;
   bottom: 1%;
   border-bottom: 1px solid;
   font-size: 0.85rem;
@@ -225,7 +225,6 @@
     position: relative;
     left: 0;
     top: 4rem;
-    /* bottom: 3rem; */
     height: 6rem;
     width: 100%;
     padding: 0;
@@ -234,7 +233,6 @@
   }
   .details::-webkit-scrollbar {
     height: 2px;
-    /* width: none; */
   }
   .desktop-form {
     display: none;

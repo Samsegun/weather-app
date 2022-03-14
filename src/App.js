@@ -151,7 +151,7 @@ const App = () => {
 
       {/* written on 26th Jan, 2022 */}
       <div className={styles.version}>
-        <p>{new Date().getUTCFullYear()} V 0.1.0</p>
+        <p> V 1.0.0</p>
       </div>
     </div>
   );
