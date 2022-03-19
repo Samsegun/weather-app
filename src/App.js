@@ -30,10 +30,9 @@ const clock = () => {
 
 const App = () => {
   const [weatherData, setWeatherData] = useState({
-    cod: "404",
+    cod: 0,
     message: "loading...",
   });
-  const [fetchError, setFetchError] = useState(null);
   const [currentTime, setCurrentTime] = useState(clock());
   const [searchItem, setSearchItem] = useState("lagos");
 
@@ -41,22 +40,17 @@ const App = () => {
     fetch(
       `https://api.openweathermap.org/data/2.5/weather?q=${searchItem}&appid=${API_OPENWEATHER}&units=metric`
     )
-      .then(response => response.json())
+      .then(response => {
+        /** to access the api's custom errors, return parse as json or check for errors in commented code */
+        return response.json();
+      })
       .then(data => {
-        if (data.cod > 200) {
-          return data;
-        } else {
-          return weatherDetails(data);
-        }
+        console.log(data);
+        return weatherDetails(data);
       })
-      .then(dataObj => {
-        //set returned object as weatherdata state
-        setWeatherData(dataObj);
-      })
+      .then(dataObject => setWeatherData(dataObject))
       .catch(err => {
-        console.log(err);
-        console.log(typeof err);
-        setFetchError(err);
+        console.log(err.message);
       });
 
     let time = setInterval(() => {
@@ -75,6 +69,7 @@ const App = () => {
     const newUserinput = userInput.trim().toLowerCase();
 
     if (parseInt(newUserinput)) {
+      // api returns random countries when digits are entered. Hence, the approach below was adopted
       setWeatherData({
         cod: "404",
         message: "Please enter valid values!",
@@ -93,37 +88,43 @@ const App = () => {
   };
 
   const weatherDetails = data => {
-    // destructure json data into different variables like temp, name etc
-    const { temp, humidity, feels_like: feelsLike } = data.main,
-      { country } = data.sys,
-      { name, cod } = data,
-      { description, icon, main } = data.weather[0],
-      { sunrise } = data.sys,
-      { sunset } = data.sys,
-      { speed } = data.wind;
+    /**when data from server contains an error, a message property is attached to the returned data */
+    if (+data.cod >= 400) {
+      console.log(data);
+      return data;
+    } else {
+      // destructure json data into different variables like temp, name etc
+      const { temp, humidity, feels_like: feelsLike } = data.main,
+        { country } = data.sys,
+        { name, cod } = data,
+        { description, icon, main } = data.weather[0],
+        { sunrise } = data.sys,
+        { sunset } = data.sys,
+        { speed } = data.wind;
 
-    // convert sunrise and sunset time with moment
-    let sunriseTime = moment.unix(sunrise).format("HH:MM");
-    let sunsetTime = moment.unix(sunset).format("HH:MM");
+      // convert sunrise and sunset time with moment
+      let sunriseTime = moment.unix(sunrise).format("HH:MM");
+      let sunsetTime = moment.unix(sunset).format("HH:MM");
 
-    // convert windspeed from m/s to kmph
-    let windSpeed = 3.6 * speed;
+      // convert windspeed from m/s to kmph
+      let windSpeed = 3.6 * speed;
 
-    // return destructured variables as an object
-    return {
-      temp,
-      feelsLike,
-      humidity,
-      country,
-      name,
-      cod,
-      icon,
-      description,
-      main,
-      sunriseTime,
-      sunsetTime,
-      windSpeed,
-    };
+      // return destructured variables as an object
+      return {
+        temp,
+        feelsLike,
+        humidity,
+        country,
+        name,
+        cod,
+        icon,
+        description,
+        main,
+        sunriseTime,
+        sunsetTime,
+        windSpeed,
+      };
+    }
   };
 
   return (
@@ -136,11 +137,7 @@ const App = () => {
       <MobileForm submitHandler={submitHandler} />
 
       {/* main body */}
-      <WeatherInfo
-        weatherData={weatherData}
-        currentTime={currentTime}
-        fetchError={fetchError}
-      />
+      <WeatherInfo weatherData={weatherData} currentTime={currentTime} />
 
       {/* weather details */}
       <WeatherDetails
@@ -156,5 +153,26 @@ const App = () => {
     </div>
   );
 };
+
+/**how handle errors */
+// async function sender() {
+//   try {
+//     const sendee = await fetch("jdjeiwke")
+
+//     if(!sendee.ok) {
+//       throw new Error("something went wrong");
+//     }
+
+//     const data = await sendee.json()
+
+//     const detsrcture = data.jf.map(item => {
+//       // ............
+//     })
+//   } catch (err) {
+//     // .........
+//     setError(err.message)
+//   }
+
+// }
 
 export default App;

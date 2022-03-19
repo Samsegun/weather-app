@@ -15,7 +15,7 @@ const WeatherDetails = ({ submitHandler, weatherData, clickHandler }) => {
           type="text"
           placeholder="Another Location..."
           ref={readUserInput}
-          className={+weatherData.cod > 200 ? styles["search-error"] : ""}
+          className={+weatherData.cod >= 400 ? styles["search-error"] : ""}
         />
         <img
           className={styles["search-icon"]}
@@ -32,7 +32,9 @@ const WeatherDetails = ({ submitHandler, weatherData, clickHandler }) => {
         <li>Moscow</li>
       </ul>
 
-      {+weatherData.cod <= 200 && (
+      {+weatherData.cod === 0 && <></>}
+
+      {+weatherData.cod === 200 && (
         <div className={styles["weather-details"]}>
           <h2 className={styles["weather-details__title"]}>Weather Details</h2>
 

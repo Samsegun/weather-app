@@ -135,11 +135,7 @@
 
 .error-message {
   padding: 0 1rem;
-}
-
-.fetch-error {
-  font-size: 3rem;
-  color: red;
+  font-size: 2rem;
 }
 
 .temp {
@@ -233,6 +229,10 @@
   }
   .details::-webkit-scrollbar {
     height: 2px;
+  }
+  .error-message {
+    font-size: 1.3rem;
+    letter-spacing: 1px;
   }
   .desktop-form {
     display: none;
