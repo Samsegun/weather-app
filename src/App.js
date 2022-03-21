@@ -41,7 +41,7 @@ const App = () => {
       `https://api.openweathermap.org/data/2.5/weather?q=${searchItem}&appid=${API_OPENWEATHER}&units=metric`
     )
       .then(response => {
-        /** to access the api's custom errors, return parse as json or check for errors in commented code */
+        /** to access the api's custom errors, parse response as json or check for errors in commented code */
         return response.json();
       })
       .then(data => {
@@ -51,6 +51,10 @@ const App = () => {
       .then(dataObject => setWeatherData(dataObject))
       .catch(err => {
         console.log(err.message);
+        setWeatherData(prevWeather => ({
+          ...prevWeather,
+          message: err.message,
+        }));
       });
 
     let time = setInterval(() => {
@@ -137,7 +141,11 @@ const App = () => {
       <MobileForm submitHandler={submitHandler} />
 
       {/* main body */}
-      <WeatherInfo weatherData={weatherData} currentTime={currentTime} />
+      <WeatherInfo
+        weatherData={weatherData}
+        currentTime={currentTime}
+        // fetchError={fetchError}
+      />
 
       {/* weather details */}
       <WeatherDetails
