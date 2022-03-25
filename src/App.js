@@ -51,6 +51,7 @@ const App = () => {
       .then(dataObject => setWeatherData(dataObject))
       .catch(err => {
         console.log(err.message);
+
         setWeatherData(prevWeather => ({
           ...prevWeather,
           message: err.message,
