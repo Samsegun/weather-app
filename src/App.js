@@ -45,7 +45,6 @@ const App = () => {
         return response.json();
       })
       .then(data => {
-        console.log(data);
         return weatherDetails(data);
       })
       .then(dataObject => setWeatherData(dataObject))
@@ -77,7 +76,7 @@ const App = () => {
       // api returns random countries when digits are entered. Hence, the approach below was adopted
       setWeatherData({
         cod: "404",
-        message: "Please enter valid values!",
+        message: "Please enter String characters!",
       });
       text.current.value = userInput;
     } else {
