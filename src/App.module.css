@@ -220,7 +220,8 @@
   .details {
     position: relative;
     left: 0;
-    top: 4rem;
+    /* top: 4rem; */
+    bottom: -66px;
     height: 6rem;
     width: 100%;
     padding: 0;
